@@ -71,13 +71,14 @@ def seq_validation(seq):
 def seq_mutation(seq, mutation_rate, transition_rate=0.7):
     mutated_seq = []
     for base in seq:
-        # mutate or not
+        # mutate
         if random.random() <= mutation_rate:
             # transition or transversion
             if random.random() <= transition_rate:
                 mutated_seq.append(transition[base])
             else:
                 mutated_seq.append(random.choice(transversion[base]))
+        # not change
         else:
             mutated_seq.append(base)
     return ''.join(mutated_seq)
@@ -99,22 +100,24 @@ def generate_variants(parent_seq, mutation_rate, no_of_variant, mode, transition
 # build a gui inferface
 def gui_interface():
     def select_input():
-        filepath = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta *.fa"), ("All files", "*.*")])
-        if filepath:
+        input_file = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta *.fa"), ("All files", "*.*")])
+        if input_file:
             entry_input.delete(0, tk.END)
-            entry_input.insert(0, filepath)
+            entry_input.insert(0, input_file)
             entry_input.xview_moveto(1.0)
 
     def select_output():
-        filepath = filedialog.asksaveasfilename(defaultextension=".fasta", filetypes=[("FASTA files", "*.fasta")])
-        if filepath:
+        output_dir = filedialog.askdirectory()
+        if output_dir:
             entry_output.delete(0, tk.END)
-            entry_output.insert(0, filepath)
+            entry_output.insert(0, output_dir)
             entry_output.xview_moveto(1.0)
 
     def start_simulation():
-        input_file = entry_input.get()
-        output_file = entry_output.get()
+        input_file = entry_input.get().strip()
+        output_dir = entry_output.get().strip()
+        # if the output_dir does not exist, create one.
+        os.makedirs(output_dir, exist_ok=True)
         try:
             mutation_rate = float(entry_mutation.get())
             transition_rate = float(entry_transition.get())
@@ -141,8 +144,12 @@ def gui_interface():
             seq = read_fasta(input_file)
             seq =  seq_validation(seq)
             variants = generate_variants(seq, mutation_rate, num_variants, mode, transition_rate=0.7)
-            with open(output_file,"w") as f:
-                for i in range(len(variants)):
+            parent_filename = os.path.join(output_dir, f"parent.fasta")
+            with open(parent_filename, "w") as f:
+                f.write(f">parent\n{seq}\n")
+            for i in range(len(variants)):
+                variant_filename = os.path.join(output_dir, f"variant{i+1}.fasta")
+                with open(variant_filename,"w") as f:
                     f.write(f">variant{i+1}\n{variants[i]}\n")
             messagebox.showinfo("Success","Simulation done.")
         except Exception as e:
@@ -162,7 +169,7 @@ def gui_interface():
     # ask user to give the output file location
     tk.Label(window, text="Output file:").grid(row=1, column=0, sticky="e")
     entry_output = tk.Entry(window, width=30)
-    entry_output.insert(0, "variants.fasta")
+    entry_output.insert(0, "variants_output")
     entry_output.grid(row=1, column=1)
     tk.Button(window, text="choose file", command=select_output).grid(row=1, column=2)
 
