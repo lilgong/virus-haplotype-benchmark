@@ -37,8 +37,8 @@ download `simulator_gui` to generate varients from your uploaded fasta file.
 usage: 
 ```./art_illumina_simulator.sh \
   <input_fasta_dir> \          # Directory from Step 1 output
-  <overall_coverage> \         # Total sequencing depth (e.g. 10000)
-  "<fraction_of_each_genome>"  # Space-delimited proportions (sum≈1)
+  <overall_coverage> \         # Total sequencing depth
+  "<fraction_of_each_genome>"  # Space-delimited fractions (sum≈1)
 ```
 
 example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
