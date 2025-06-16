@@ -39,7 +39,7 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
 
 2. Download `art_illumina_simulator.sh`, edit the `art_illumina_path` to your own path.
 
-3. Give the permission to excute
+3. Give the permission to execute
 
     `chmod +x art_illumina_simulator.sh`
 
