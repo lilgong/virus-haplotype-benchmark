@@ -48,9 +48,9 @@ do
 
     base_name=$(basename ${fasta_file} .fasta)
     base_name=${base_name%.fa}
-    output_name="paired_${base_name}_"
+    output_name="paired_${base_name}_R"
 
-    echo "start simulate ${fasta_file}，coverage=${cov_int}"
+    echo "start simulate ${fasta_file}, coverage=${cov_int}"
 
     ${art_illumina_path} \
 	-sam \
