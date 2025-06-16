@@ -1,6 +1,6 @@
 # Benchmarking of Virus Haplotype Reconstruction Tools
 ## Step 1 Generate varients sequence
-download `simulator_gui` to generate varients from your uploaded fasta file.
+Download `simulator_gui` to generate varients from your uploaded fasta file.
 
 **Input:**
 
@@ -33,15 +33,23 @@ download `simulator_gui` to generate varients from your uploaded fasta file.
 
 
 ## Step 2 ART Illumina Paired-end sequencing simulation
+1. Download ART-illumina from https://www.niehs.nih.gov/research/resources/software/biostatistics/art
 
-usage: 
-```./art_illumina_simulator.sh \
-  <input_fasta_dir> \          # Directory from Step 1 output
-  <overall_coverage> \         # Total sequencing depth
-  "<fraction_of_each_genome>"  # Space-delimited fractions (sum≈1)
-```
+    [Option] add art_illumina to the system path
 
-example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
+2. Download `art_illumina_simulator.sh`, edit the `art_illumina_path` to your own path.
+
+3. Run in the terminal
+
+    usage: 
+    ```
+    your_path/art_illumina_simulator.sh \
+      <input_fasta_dir> \          # Directory from Step 1 output
+      <overall_coverage> \         # Total sequencing depth
+      "<fraction_of_each_genome>"  # Space-delimited fractions (sum≈1)
+    ```
+    
+    example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
 
 
 
