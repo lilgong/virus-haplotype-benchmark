@@ -66,5 +66,8 @@ do
     ((i++))
 done
 
+cat paired_*_R1.fq > all_paired_reads_R1.fq
+cat paired_*_R2.fq > all_paired_reads_R2.fq
+
 echo "All done"
 		
