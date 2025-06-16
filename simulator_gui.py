@@ -167,7 +167,7 @@ def gui_interface():
     tk.Button(window, text="choose file", command=select_input).grid(row=0, column=2)
 
     # ask user to give the output file location
-    tk.Label(window, text="Output file:").grid(row=1, column=0, sticky="e")
+    tk.Label(window, text="Output Directory:").grid(row=1, column=0, sticky="e")
     entry_output = tk.Entry(window, width=30)
     entry_output.insert(0, "variants_output")
     entry_output.grid(row=1, column=1)
