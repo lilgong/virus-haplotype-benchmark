@@ -55,5 +55,7 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
     
     example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
 
-
+## Step 3 Test tools
+### PredictHaplo
+because the input should be sam/bam files
 
