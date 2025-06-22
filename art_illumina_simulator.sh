@@ -3,14 +3,17 @@
 input_fasta_dir=$1
 total_coverage=$2
 f_parameters=$3
-art_illumina_path="/Users/nyl/Downloads/art_bin_MountRainier/art_illumina" ###change to your art_illumina path
 read_length=250
 output_dir="./simulate_reads"
 
-mkdir -p ${output_dir}
-cd ${output_dir}
-
-# ------get the input f parameters and check if it is valid------
+# ------ check if the input is valid-----------
+## ----- check the input directory storing fasta files exists----------
+echo ">>>$1<<<" | cat -v
+if [ ! -d "${input_fasta_dir}" ]; then
+    echo "Error: input directory '${input_fasta_dir}' does not exist."
+    exit 1
+fi
+## ------get the input f parameters and check if it is valid------
 IFS=' ' read -r -a f_parameters <<< ${f_parameters}
 sum=0
 for frac in ${f_parameters[@]}
@@ -28,7 +31,7 @@ then
     echo "The sum of f parameters should be 1"
     exit 1
 fi		
-# ------check if the number of f parameters matches the file number------
+## ------check if the number of f parameters matches the file number------
 fasta_files=(${input_fasta_dir}/*.fasta)
 variant_count=${#fasta_files[@]}
 fraction_count=${#f_parameters[@]}
@@ -38,6 +41,9 @@ then
     exit 1
 fi
 
+# ------ create output directory -------
+mkdir -p ${output_dir}
+cd ${output_dir}
 # ------start art illumina------
 i=0
 for fasta_file in ${fasta_files[@]}
@@ -48,11 +54,11 @@ do
 
     base_name=$(basename ${fasta_file} .fasta)
     base_name=${base_name%.fa}
-    output_name="paired_${base_name}_R"
+    output_name="paired_${base_name}_"
 
     echo "start simulate ${fasta_file}, coverage=${cov_int}"
 
-    ${art_illumina_path} \
+    art_illumina\
 	-sam \
         -i ${fasta_file} \
 	-p \
@@ -66,8 +72,14 @@ do
     ((i++))
 done
 
-cat paired_*_R1.fq > all_paired_reads_R1.fq
-cat paired_*_R2.fq > all_paired_reads_R2.fq
+cat paired_*_R1.fq > simulated_R1.fq
+cat paired_*_R2.fq > simulated_R2.fq
+# remove the original paired reads (keep them if want)
+read -p "Only keep combined FASTQ files? (y/n): " confirm && [[ $confirm == [Yy] ]] && rm paired*
+
+# --- use bwa-mem2 align the simulated reads with the reference (parent) reads
+bwa-mem2 index ${input_fasta_dir}/parent.fasta
+bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fq simulated_R2.fq | samtools sort -o simulated_reads_sorted.bam
+samtools index simulated_reads_sorted.bam
 
 echo "All done"
-		
