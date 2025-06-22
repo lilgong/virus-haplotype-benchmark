@@ -8,7 +8,7 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
 
     sample sequence: KC503937.fasta
       
-2. **Output directory** (existing files will not be deleted. recommend to make it empty to avoid overwriting)
+2. **Output directory** (*existing files will be deleted)
 
       example of output: parent.fasta, variant1.fasta, variant2.fasta...
 
@@ -29,15 +29,12 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
         Variant 3 – mutate from varient 2
         Variant 4 – mutate from varient 3
 
-
-
-
 ## Step 2 ART Illumina Paired-end sequencing simulation
 1. Download ART-illumina from https://www.niehs.nih.gov/research/resources/software/biostatistics/art
 
-    [Option] add art_illumina to the system path
+    * add art_illumina to your path
 
-2. Download `art_illumina_simulator.sh`, edit the `art_illumina_path` to your own path.
+2. Download `art_illumina_simulator.sh`
 
 3. Give the permission to execute
 
@@ -55,7 +52,9 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
     
     example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
 
-## Step 3 Test tools
-### PredictHaplo
-because the input should be sam/bam files
+4. Output
 
+    - simulated_R1.fq
+    - simulated_R2.fq
+    - simulated_reads_sorted.bam
+    - simulated_reads_sorted.bam.bai
