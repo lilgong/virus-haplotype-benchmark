@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
+import shutil
 import random
 
 transition = {
@@ -116,7 +117,9 @@ def gui_interface():
     def start_simulation():
         input_file = entry_input.get().strip()
         output_dir = entry_output.get().strip()
-        # if the output_dir does not exist, create one.
+        # if the output_dir exists, remove it (to make sure it is empty)
+        if os.path.exists(output_dir):
+            shutil.rmtree(output_dir)
         os.makedirs(output_dir, exist_ok=True)
         try:
             mutation_rate = float(entry_mutation.get())
