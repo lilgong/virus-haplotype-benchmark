@@ -8,11 +8,13 @@ output_dir="./simulate_reads"
 
 # ------ check if the input is valid-----------
 ## ----- check the input directory storing fasta files exists----------
-echo ">>>$1<<<" | cat -v
 if [ ! -d "${input_fasta_dir}" ]; then
     echo "Error: input directory '${input_fasta_dir}' does not exist."
     exit 1
 fi
+## Convert to absolute path
+input_fasta_dir="$(cd "$1" && pwd)"
+
 ## ------get the input f parameters and check if it is valid------
 IFS=' ' read -r -a f_parameters <<< ${f_parameters}
 sum=0
@@ -31,6 +33,7 @@ then
     echo "The sum of f parameters should be 1"
     exit 1
 fi		
+
 ## ------check if the number of f parameters matches the file number------
 fasta_files=(${input_fasta_dir}/*.fasta)
 variant_count=${#fasta_files[@]}
@@ -79,7 +82,11 @@ read -p "Only keep combined FASTQ files? (y/n): " confirm && [[ $confirm == [Yy]
 
 # --- use bwa-mem2 align the simulated reads with the reference (parent) reads
 bwa-mem2 index ${input_fasta_dir}/parent.fasta
+# align and sort to BAM file
 bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fq simulated_R2.fq | samtools sort -o simulated_reads_sorted.bam
+# generate index for the BAM file
 samtools index simulated_reads_sorted.bam
+# convert to sorted sam file
+samtools view -h -o simulated_reads_sorted.sam simulated_reads_sorted.bam
 
 echo "All done"
