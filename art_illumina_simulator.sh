@@ -57,7 +57,7 @@ do
 
     base_name=$(basename ${fasta_file} .fasta)
     base_name=${base_name%.fa}
-    output_name="paired_${base_name}_"
+    output_name="paired_${base_name}_R"
 
     echo "start simulate ${fasta_file}, coverage=${cov_int}"
 
@@ -83,10 +83,9 @@ read -p "Only keep combined FASTQ files? (y/n): " confirm && [[ $confirm == [Yy]
 # --- use bwa-mem2 align the simulated reads with the reference (parent) reads
 bwa-mem2 index ${input_fasta_dir}/parent.fasta
 # align and sort to BAM file
-bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fq simulated_R2.fq | samtools sort -o simulated_reads_sorted.bam
+bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fq simulated_R2.fq > aligned_simulated_reads.sam
+samtools sort -o sorted_simulated_reads.bam aligned_simulated_reads.sam
 # generate index for the BAM file
-samtools index simulated_reads_sorted.bam
-# convert to sorted sam file
-samtools view -h -o simulated_reads_sorted.sam simulated_reads_sorted.bam
+samtools index sorted_simulated_reads.bam 
 
 echo "All done"
