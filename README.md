@@ -74,7 +74,7 @@ gtime -v predicthaplo \
   --do_local_Analysis 0 # run 1 first
 ```
 
-output:
+**output**:
  - haplotypes ?
  - User time (seconds): 2177.60
     
@@ -85,7 +85,7 @@ output:
 
 	Maximum resident set size (kbytes): 467848
 ### 2. cliqueSNV 
-input: bam file
+**Input**: bam file
 ```
 gtime -v cliqueSNV \
   -m snv-illumina \
@@ -94,7 +94,7 @@ gtime -v cliqueSNV \
   -outdir clique_output \
   -threads 4
 ```
-output:
+**Output** (FASTA file):
  - 6 haplotypes (0.6392, 0.0908, 0.0728, 0.0681, 0.0655, 0.0635)
  - User time (seconds): 75.74
     
@@ -107,13 +107,25 @@ output:
 	Maximum resident set size (kbytes): 1108976
 
 ### 3. QuRe
-input: only support FASTA file, cannot do paired-end
+**Input**: only support FASTA file, cannot do paired-end
 
 1.  use `seqtk` convert paired-end FASTQ to FASTA file
 `cat simulated_R1.fq simulated_R2.fq | seqtk seq -a - > reads_combined.fasta`
 2. create a QuRE output directory
 3. Run QuRe
 `gtime -v java -cp path/QuRe QuRe path/reads_combined.fasta path/parent.fasta`
+
+**Output** (txt files, stored in the input reads directory)
+- 8 haplotypes (0.6335, 0.1298, 0.1013, 0.0865, 0.01992, 0.01206, 0.01200, 0.0049)
+ - User time (seconds): 58602.68
+    
+    System time (seconds): 10952.69
+
+    Elapsed (wall clock) time (h:mm:ss or m:ss):  5:53:57
+- 
+	Percent of CPU this job got: 327%
+
+	Maximum resident set size (kbytes): 2527824
 ### 4. SAVAGE
 python 2.6+ but not python 3.x
 ### 5. TenSQR
