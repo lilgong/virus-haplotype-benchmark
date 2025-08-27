@@ -75,17 +75,20 @@ do
     ((i++))
 done
 
-cat paired_*_R1.fq > simulated_R1.fq
-cat paired_*_R2.fq > simulated_R2.fq
+cat paired_*_R1.fq > simulated_R1.fastq
+cat paired_*_R2.fq > simulated_R2.fastq
 # remove the original paired reads (keep them if want)
 read -p "Only keep combined FASTQ files? (y/n): " confirm && [[ $confirm == [Yy] ]] && rm paired*
 
 # --- use bwa-mem2 align the simulated reads with the reference (parent) reads
 bwa-mem2 index ${input_fasta_dir}/parent.fasta
 # align and sort to BAM file
-bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fq simulated_R2.fq > aligned_simulated_reads.sam
+bwa-mem2 mem ${input_fasta_dir}/parent.fasta simulated_R1.fastq simulated_R2.fastq > aligned_simulated_reads.sam
 samtools sort -o sorted_simulated_reads.bam aligned_simulated_reads.sam
 # generate index for the BAM file
-samtools index sorted_simulated_reads.bam 
+samtools index sorted_simulated_reads.bam
+
+# convert to fasta file for some tools
+cat simulated_R1.fastq simulated_R2.fastq | seqtk seq -a - > reads_combined.fasta
 
 echo "All done"
