@@ -32,15 +32,11 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
 ## Step 2 ART Illumina Paired-end sequencing simulation
 1. Download ART-illumina from https://www.niehs.nih.gov/research/resources/software/biostatistics/art
 
-    * add art_illumina to your path **(soft link)**
+    * add art_illumina to your path
 
-2. Download `art_illumina_simulator.sh`
-
-3. Give the permission to execute
-
-    `chmod +x art_illumina_simulator.sh`
-
-3. Run in the terminal
+2. Packages: bwa-mem2, samtools, seqtk
+3. Download `art_illumina_simulator.sh` and Give the permission to execute `chmod +x art_illumina_simulator.sh`
+4. Run in the terminal
 
     usage: 
     ```
@@ -52,13 +48,14 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
     
     example: `./art_illumina_simulator.sh ./variants_output 10000 "0.72 0.22 0.05 0.01 0.001"`
 
-4. Output
+5. Output
 
-    - simulated_R1.fq
-    - simulated_R2.fq
+    - simulated_R1.fastq
+    - simulated_R2.fastq
     - aligned_simulated_reads.sam
     - sorted_simulated_reads.bam
     - sorted_simulated_reads.bam.bai
+    - reads_combined.fasta
 
 ## Step 3 Test Haplotype Reconstruction Tools
 ### 1. PredictHaplo
