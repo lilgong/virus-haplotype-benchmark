@@ -113,7 +113,6 @@ project/
 │   │   ├── reads_combined.fasta
 │   │   └── reference.fasta
 │   ├── zone2/
-│   │   └── ...
 │   └── ...
 ├── logs/                  # Log files for each tool run
 │   ├── zone1/
@@ -125,6 +124,9 @@ project/
 │   └── ...
 ├── results/               # outputs
 │   ├── tool1/
+│   │   ├── zone1
+│   │   ├── zone2
+│   │   └── ...
 │   ├── tool2/
 │   └── ...
 ├── scripts/               # Run scripts (bash, python, etc.)
