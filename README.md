@@ -58,74 +58,128 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
     - reads_combined.fasta
 
 ## Step 3 Test Haplotype Reconstruction Tools
-### 1. PredictHaplo
+
+### Tool List (detailed list is in Tools_table.xslx)
+
+| Tool | Source Link |
+|------|-------------|
+| SAVAGE | https://github.com/HaploConduct/HaploConduct |
+| aBayesQR | https://github.com/SoYeonA/aBayesQR |
+| CliqueSNV | https://github.com/vtsyvina/CliqueSNV |
+| HaploClique | https://github.com/armintoepfer/haploclique |
+| PredictHaplo | https://github.com/cbg-ethz/PredictHaplo |
+| QuasiRecomb | https://github.com/cbg-ethz/QuasiRecomb |
+| QuRe | https://sourceforge.net/projects/qure/ |
+| RegressHaplo | https://github.com/SLeviyang/RegressHaplo |
+| ShoRAH | https://github.com/cbg-ethz/shorah |
+| TenSQR | https://github.com/SoYeonA/TenSQR |
+| ViQuaS | https://sourceforge.net/projects/viquas/ |
+| BIOA (with VirA) | https://alan.cs.gsu.edu/vira/#welcome-to-vira-and-bioa-s-documentation |
+| HaploDMF | https://github.com/dhcai21/HaploDMF |
+| HaROLD | https://github.com/RichardAGoldstein/HaROLD |
+| NeurHap | https://github.com/xuehansheng/NeurHap |
+| paphpipe | https://github.com/gwcbi/haphpipe |
+| Qcolors | not found |
+| QSdpR | https://sourceforge.net/projects/qsdpr/ |
+| ShotMCF | https://alan.cs.gsu.edu/NGS/?q=content/shotmcf |
+| VILOCA | https://github.com/cbg-ethz/VILOCA |
+| ViSpA | https://alan.cs.gsu.edu/NGS/?q=content/vispa |
+| V-Phaser2 | https://github.com/broadinstitute/v-phaser2 |
+| 2SNV | https://alan.cs.gsu.edu/NGS/?q=content/2snv |
+| V-Phaser + V-Profiler1 | https://www.broadinstitute.org/viral-genomics/viral-genomics-analysis-software-registration |
+| VGA | http://genetics.cs.ucla.edu/vga/ |
+| StrainLine | https://github.com/HaploKit/Strainline |
+| ViQUF | https://github.com/borjaf696/ViQUF |
+| VStrains | https://github.com/metagentools/VStrains |
+| Mutant-Bin | inaccessible |
+| PEHaplo | https://github.com/chjiao/PEHaplo |
+| VG-Flow | https://bitbucket.org/jbaaijens/vg-flow/src/master/ |
+| viaDBG | https://github.com/borjaf696/viaDBG |
+| ViPRA-Haplo (MLEHaplo) | https://github.com/raunaq-m/MLEHaplo |
+| Virus-VG | https://bitbucket.org/jbaaijens/virus-vg/src/master/ |
+
+---
+
+### Project Structure
+```
+project/
+├── data/                  # Input files
+│   ├── zone1/
+│   │   ├── simulated_R1.fastq
+│   │   ├── simulated_R2.fastq
+│   │   ├── aligned_simulated_reads.sam
+│   │   ├── sorted_simulated_reads.bam
+│   │   ├── sorted_simulated_reads.bam.bai
+│   │   ├── reads_combined.fasta
+│   │   └── reference.fasta
+│   ├── zone2/
+│   │   └── ...
+│   └── ...
+├── logs/                  # Log files for each tool run
+│   ├── zone1/
+│   │   ├── time.log
+│   │   └── run.log
+│   ├── zone2/
+│   │   ├── time.log
+│   │   └── run.log
+│   └── ...
+├── results/               # outputs
+│   ├── tool1/
+│   ├── tool2/
+│   └── ...
+├── scripts/               # Run scripts (bash, python, etc.)
+└── tools/                 # Installed tools (added to PATH/bin)
+```
+---
+### Execution
+- Each tool is run in its own conda environment. 
+- Results and logs are stored in tool-specific folders.  
+
+Below is a template bash script to standardize execution:
 
 ```
-gtime -v predicthaplo \
-  --sam aligned_simulated_reads.sam \      
-  --reference parent.fasta \
-  --prefix output \              
-  --visualization_level 0 \
-  --have_true_haplotypes 0 \
-  --true_haplotypes dummy.fasta \
-  --do_local_Analysis 0 # run 1 first
+
+#!/bin/bash
+
+# === Activate conda environment ===
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate haploclique_env   # change to your env name
+
+# Define paths
+zone="zone_name"        # change to your zone name
+tool=“tool_name”        # change to your tool name
+base="/home/project"
+input_bam="${base}/data/${zone}/sorted_simulated_reads.bam"
+output_dir="${base}/results/${tool}/${zone}"
+log_dir="${base}/logs/${tool}/${zone}"
+
+log="${log_dir}/run.log"
+time_log="${log_dir}/time.log"
+
+# Create folders
+mkdir -p "${output_dir}" "${log_dir}"
+
+# Run tool
+echo "Running Tool_Name at $(date)..."
+/usr/bin/time -v command        # give the command based on your settings
+    > "${log}" 2> "${time_log}"
+
+echo "=== Finished at $(date) ==="
+
+conda deactivate
+
 ```
 
-**output**:
- - haplotypes ?
- - User time (seconds): 2177.60
-    
-    System time (seconds): 2.48
+---
+Note that you may need to format the output file. (could used `sed`)
 
-    Elapsed (wall clock) time (h:mm:ss or m:ss): 36:22.81
- - 	Percent of CPU this job got: 99%
+## Step 4 Evaluation
+- Merge ground truth and predicted haplotypes into a single FASTA file.
 
-	Maximum resident set size (kbytes): 467848
-### 2. cliqueSNV 
-**Input**: bam file
-```
-gtime -v cliqueSNV \
-  -m snv-illumina \
-  -in simulate_reads/sorted_simulated_reads.bam \
-  -ref variants_output/parent.fasta \
-  -outdir clique_output \
-  -threads 4
-```
-**Output** (FASTA file):
- - 6 haplotypes (0.6392, 0.0908, 0.0728, 0.0681, 0.0655, 0.0635)
- - User time (seconds): 75.74
-    
-    System time (seconds): 3.01
-
-    Elapsed (wall clock) time (h:mm:ss or m:ss): 0:29.39
-- 
-	Percent of CPU this job got: 267%
-
-	Maximum resident set size (kbytes): 1108976
-
-### 3. QuRe
-**Input**: only support FASTA file, cannot do paired-end
-
-1.  use `seqtk` convert paired-end FASTQ to FASTA file
-`cat simulated_R1.fq simulated_R2.fq | seqtk seq -a - > reads_combined.fasta`
-2. create a QuRE output directory
-3. Run QuRe
-`gtime -v java -cp path/QuRe QuRe path/reads_combined.fasta path/parent.fasta`
-
-**Output** (txt files, stored in the input reads directory)
-- 8 haplotypes (0.6335, 0.1298, 0.1013, 0.0865, 0.01992, 0.01206, 0.01200, 0.0049)
- - User time (seconds): 58602.68
-    
-    System time (seconds): 10952.69
-
-    Elapsed (wall clock) time (h:mm:ss or m:ss):  5:53:57
-- 
-	Percent of CPU this job got: 327%
-
-	Maximum resident set size (kbytes): 2527824
-### 4. SAVAGE
-python 2.6+ but not python 3.x
-### 5. TenSQR
-1. `git clone https://github.com/SoYeonA/TenSQR.git`
-2. Enter TenSQR directory run `make`
-3. Check config file format (configure to your setting)
+  `cat true.fasta predict.fasta > all.fasta`
+- Perform multiple sequence alignment using MAFFT.
+  `mafft --auto all.fasta > all_aln.fasta`
+- Construct a phylogenetic tree with IQ-TREE.
+  `iqtree -s all_aln.fasta -m GTR+G -nt AUTO -pre all_sequences`
+- Compute the distance (could be done by clustalo)
+  `clustalo -i all.fasta -o all_aln.fasta --outfmt=clu --force`
