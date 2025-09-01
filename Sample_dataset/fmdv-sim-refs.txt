@@ -1,0 +1,10 @@
+FMDV serotype SAT1 -10,000 fold coverage
+FMDV serotype SAT2 -1,000 fold coverage
+FMDV serotype SAT3 -100 fold coverage
+FMDV serotype O -10 fold coverage
+
+
+SAT1 = LC868350 Foot-and-mouth disease virus SAT 1 THI-QAR9 RNA, complete genome
+SAT2 = PQ587573 Foot-and-mouth disease virus SAT 2 isolate ETH/105/2022, complete genome
+SAT3 = MG372727 Foot-and-mouth disease virus SAT 3 isolate SAT 3/2 S. Africa, complete genome
+O = NC_039210 Foot-and-mouth disease virus O isolate o6pirbright iso58, complete genome

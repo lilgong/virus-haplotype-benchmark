@@ -171,15 +171,19 @@ conda deactivate
 ```
 
 ---
-Note that you may need to format the output file. (could used `sed`)
+Note that you may need to format the output file. (e.g., `sed`)
 
 ## Step 4 Evaluation
 - Merge ground truth and predicted haplotypes into a single FASTA file.
 
   `cat true.fasta predict.fasta > all.fasta`
 - Perform multiple sequence alignment using MAFFT.
+
   `mafft --auto all.fasta > all_aln.fasta`
 - Construct a phylogenetic tree with IQ-TREE.
+
   `iqtree -s all_aln.fasta -m GTR+G -nt AUTO -pre all_sequences`
-- Compute the distance (could be done by clustalo)
+- Compute the distance (e.g., using Clustal Omega):
+
   `clustalo -i all.fasta -o all_aln.fasta --outfmt=clu --force`
+- Alternatively, sequence distance, weighted UniFrac distance, as well as precision and recall can be computed using the provided Python scripts (distance.py & precision.py)
