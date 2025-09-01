@@ -59,7 +59,7 @@ Download `simulator_gui` to generate varients from your uploaded fasta file.
 
 ## Step 3 Test Haplotype Reconstruction Tools
 
-### Tool List (detailed list is in Tools_table.xslx)
+### Tool List (detailed list is in Summary_of_Haplotype_Tools.xlsx)
 
 | Tool | Source Link |
 |------|-------------|
